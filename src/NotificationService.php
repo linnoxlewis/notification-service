@@ -1,8 +1,8 @@
 <?php
 
-namespace notificationService;
+namespace linnoxlewis\notificationService;
 
-use notificationService\interfaces\NotificationInterface;
+use linnoxlewis\notificationService\interfaces\NotificationInterface;
 
 /**
  * Class NotificationService

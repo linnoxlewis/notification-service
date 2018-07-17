@@ -1,6 +1,6 @@
 <?php
 
-namespace notificationService\interfaces;
+namespace linnoxlewis\notificationService\interfaces;
 /**
  * Interface NotificationInterface
  *

@@ -1,8 +1,8 @@
 <?php
 
-namespace notificationService\services;
+namespace linnoxlewis\notificationService\services;
 
-use notificationService\interfaces\NotificationInterface;
+use linnoxlewis\notificationService\interfaces\NotificationInterface;
 
 use sngrl\PhpFirebaseCloudMessaging\Message;
 use sngrl\PhpFirebaseCloudMessaging\Notification;

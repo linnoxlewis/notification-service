@@ -1,10 +1,9 @@
 <?php
 
-namespace notificationService\notifications;
+namespace linnoxlewis\notificationService;
 
-use notificationService\interfaces\NotificationInterface;
-use notificationService\NotificationService;
-use notificationService\services\Fcm;
+use linnoxlewis\notificationService\interfaces\NotificationInterface;
+use linnoxlewis\notificationService\services\Fcm;
 
 class FcmService extends NotificationService
 {
