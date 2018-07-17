@@ -3,12 +3,17 @@
 namespace linnoxlewis\notificationService\services;
 
 use linnoxlewis\notificationService\interfaces\NotificationInterface;
-
+use linnoxlewis\notificationService\NotificationException;
+use Psr\Http\Message\ResponseInterface;
 use sngrl\PhpFirebaseCloudMessaging\Message;
 use sngrl\PhpFirebaseCloudMessaging\Notification;
 use sngrl\PhpFirebaseCloudMessaging\Recipient\Device;
 use sngrl\PhpFirebaseCloudMessaging\Client;
 
+/**
+ * Class Fcm
+ * @package linnoxlewis\notificationService\services
+ */
 class Fcm implements NotificationInterface
 {
     /**
@@ -16,33 +21,40 @@ class Fcm implements NotificationInterface
      *
      * @var string
      */
-    private $title;
+    private $title = "";
     /**
      * message body
      *
      * @var string
      */
-   private $body;
+    private $body = "";
     /**
      * to message
      *
      * @var array
      */
-    private $to;
+    private $recipients;
+    /**
+     * Secret key
+     *
+     * @var string
+     */
+    private $secretKey;
 
-    public function __construct($title,$body,$to)
+    /**
+     * SmsService constructor.
+     * @param string $secretKey
+     * @param string $title
+     * @param string $body
+     * @param array  $recipients
+     */
+    public function __construct(string $secretKey, string $title, string $body,array $recipients)
     {
-        $this->to = $to;
+        $this->secretKey = $secretKey;
+        $this->recipients = $recipients;
         $this->title = $title;
         $this->body = $body;
     }
-
-    /**
-     * user data
-     *
-     * @var array
-     */
-    public $data;
 
     /**
      * Create and config Device instance;
@@ -52,7 +64,7 @@ class Fcm implements NotificationInterface
      * @see Device
      * @return Device
      */
-    private function getDeviceInstance($deviceToken): Device
+    private function getDeviceInstance(string $deviceToken): Device
     {
         return new Device($deviceToken);
     }
@@ -78,17 +90,11 @@ class Fcm implements NotificationInterface
         $message = new Message();
         $message->setPriority('high');
 
-        if (empty($this->to)) {
-            throw new ErrorException("no devices for the user");
+        foreach ($this->recipients as $recipient) {
+            $message->addRecipient($this->getDeviceInstance($recipient));
         }
 
-        foreach ($this->to as $too) {
-            $message->addRecipient($this->getDeviceInstance($too));
-        }
-
-        $message
-            ->setNotification($this->getNotificationInstance())
-            ->setData($this->data);
+        $message->setNotification($this->getNotificationInstance());
 
         return $message;
     }
@@ -101,10 +107,8 @@ class Fcm implements NotificationInterface
      */
     protected function getClient(): Client
     {
-        $server_key = '_YOUR_SERVER_KEY_';
-
         $client = new Client();
-        $client->setApiKey($server_key);
+        $client->setApiKey($this->secretKey);
         $client->injectGuzzleHttpClient(new \GuzzleHttp\Client());
 
         return $client;
@@ -113,20 +117,39 @@ class Fcm implements NotificationInterface
     /**
      * Method for sending message.
      *
+     * @throws NotificationException
      * @return array
      */
     public function send(): array
     {
         $client = $this->getClient();
-
         $message = $this->getMessage();
+        $request = $client->send($message);
+        $response = $this->getResponse($request);
 
-        $response = $client->send($message);
+        return $response;
+    }
 
-        $result = [
-            "statusCode" => $response->getStatusCode(),
-            "body" => $response->getBody()->getContents(),
+
+    /**
+     * Get response from api.
+     *
+     * @param ResponseInterface $request request from api
+     *
+     * @throws NotificationException
+     * @return array
+     */
+    private function getResponse(ResponseInterface $request) : array
+    {
+        if ($request == null )
+        {
+            throw new NotificationException("Undefined response");
+        }
+        $response = json_decode($request->getBody()->getContents());
+
+        return [
+            "statusCode" => $request->getStatusCode(),
+            "body" => $response->results[0]->error
         ];
-        return $result;
     }
 }

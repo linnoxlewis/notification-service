@@ -4,7 +4,7 @@ namespace linnoxlewis\notificationService\interfaces;
 /**
  * Interface NotificationInterface
  *
- * @package app\components\notifications\interfaces
+ * @package linnoxlewis\notificationService\interfaces
  */
 interface NotificationInterface
 {

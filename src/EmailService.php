@@ -3,13 +3,14 @@
 namespace linnoxlewis\notificationService;
 
 use linnoxlewis\notificationService\interfaces\NotificationInterface;
+use linnoxlewis\notificationService\services\Email;
 use linnoxlewis\notificationService\services\Fcm;
 
 /**
- * Class FcmService
+ * Class EmailService
  * @package linnoxlewis\notificationService
  */
-class FcmService extends NotificationService
+class EmailService extends NotificationService
 {
     /**
      * message title
@@ -24,7 +25,7 @@ class FcmService extends NotificationService
      */
     private $body;
     /**
-     * recipients message
+     * to message
      *
      * @var array
      */
@@ -59,6 +60,6 @@ class FcmService extends NotificationService
      */
     public function getService(): NotificationInterface
     {
-       return new Fcm($this->secretKey, $this->title,$this->body,$this->recipients);
+       return new Email($this->secretKey,$this->title,$this->body,$this->recipients);
     }
 }
