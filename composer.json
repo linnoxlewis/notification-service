@@ -1,5 +1,5 @@
 {
-    "name": "linnoxlewis/notificationsService",
+    "name": "linnoxlewis/notification-service",
     "description": "Service for send message",
     "type": "package",
     "require": {
@@ -17,7 +17,7 @@
     "prefer-stable": true ,
     "autoload": {
         "psr-4": {
-            "linnoxlewis\\notificationService\\": "src/"
+            "linnoxlewis\\notification-service\\": "src/"
         }
     }
 }
