@@ -1,0 +1,23 @@
+{
+    "name": "linnoxlewis/notificationsService",
+    "description": "Service for send message",
+    "type": "package",
+    "require": {
+        "php": "7.*",
+        "sngrl/php-firebase-cloud-messaging": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vitaliy Osipenko",
+            "email": "vosipenko1394@gmail.com"
+        }
+    ],
+    "minimum-stability" : "dev",
+    "prefer-stable": true ,
+    "autoload": {
+        "psr-4": {
+            "linnoxlewis\\notificationService\\": "src/"
+        }
+    }
+}
