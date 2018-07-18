@@ -5,7 +5,9 @@ install :
 
           1. enter the command on console - composer require "linnoxlewis/notification-service"
           
-          2. add command in your composer - "require": {
+          2. add command in your composer - 
+          
+          "require": {
           ...,
           "linnoxlewis/notification-service" : "dev-master",
           ...
