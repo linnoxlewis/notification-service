@@ -19,8 +19,8 @@ usage :
           $service = new FcmService($apiKey,$title,$body,[$deviceToken1, $deviceToken2,...]);
           $service->send();
         
-          2. For sending sms notification your application must registered in sms.ru service and have api key.
-          $service = new FcmService($apiKey,$title,$body,[$telephoneNumber1, $telephoneNumber2,...]);
+          2. For sending sms notification your application must registered in sms.ru service, positive balance on the account and you have api key.
+          $service = new SmsService($apiKey,$title,$body,[$telephoneNumber1, $telephoneNumber2,...]);
           $service->send();
         
           3. For sending mail notification 
