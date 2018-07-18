@@ -2,6 +2,7 @@
 send notification for sms, push-notification and email
 
 install :
+
           1. enter the command on console - composer require "linnoxlewis/notification-service"
           
           2. add command in your composer - "require": {
@@ -20,7 +21,7 @@ usage :
           $service = new FcmService($apiKey,$title,$body,[$telephoneNumber1, $telephoneNumber2,...]);
           $service->send();
         
-          1. For sending mail notification 
+          3. For sending mail notification 
           $service = new EmailService("",$title,$body,[$email1, $email2,...]);
           $service->send();
         
