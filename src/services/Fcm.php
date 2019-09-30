@@ -2,7 +2,6 @@
 
 namespace linnoxlewis\notificationService\services;
 
-use linnoxlewis\notificationService\interfaces\NotificationInterface;
 use linnoxlewis\notificationService\NotificationException;
 use Psr\Http\Message\ResponseInterface;
 use sngrl\PhpFirebaseCloudMessaging\Message;
@@ -14,46 +13,21 @@ use sngrl\PhpFirebaseCloudMessaging\Client;
  * Class Fcm
  * @package linnoxlewis\notificationService\services
  */
-class Fcm implements NotificationInterface
+class Fcm extends BaseClass
 {
     /**
-     * message title
+     * Method for sending message.
      *
-     * @var string
+     * @throws NotificationException
+     * @return array
      */
-    private $title = "";
-    /**
-     * message body
-     *
-     * @var string
-     */
-    private $body = "";
-    /**
-     * to message
-     *
-     * @var array
-     */
-    private $recipients;
-    /**
-     * Secret key
-     *
-     * @var string
-     */
-    private $secretKey;
-
-    /**
-     * SmsService constructor.
-     * @param string $secretKey
-     * @param string $title
-     * @param string $body
-     * @param array  $recipients
-     */
-    public function __construct(string $secretKey, string $title, string $body,array $recipients)
+    public function send(): array
     {
-        $this->secretKey = $secretKey;
-        $this->recipients = $recipients;
-        $this->title = $title;
-        $this->body = $body;
+        $client = $this->getClient();
+        $message = $this->getMessage();
+        $request = $client->send($message);
+        $response = $this->getResponse($request);
+        return $response;
     }
 
     /**
@@ -89,16 +63,12 @@ class Fcm implements NotificationInterface
     {
         $message = new Message();
         $message->setPriority('high');
-
         foreach ($this->recipients as $recipient) {
             $message->addRecipient($this->getDeviceInstance($recipient));
         }
-
         $message->setNotification($this->getNotificationInstance());
-
         return $message;
     }
-
     /**
      * Create and config Client instance.
      *
@@ -110,43 +80,24 @@ class Fcm implements NotificationInterface
         $client = new Client();
         $client->setApiKey($this->secretKey);
         $client->injectGuzzleHttpClient(new \GuzzleHttp\Client());
-
         return $client;
     }
 
     /**
-     * Method for sending message.
-     *
-     * @throws NotificationException
-     * @return array
-     */
-    public function send(): array
-    {
-        $client = $this->getClient();
-        $message = $this->getMessage();
-        $request = $client->send($message);
-        $response = $this->getResponse($request);
-
-        return $response;
-    }
-
-
-    /**
      * Get response from api.
      *
-     * @param ResponseInterface $request request from api
+     * @param Response $request request from api
      *
      * @throws NotificationException
      * @return array
      */
-    private function getResponse(ResponseInterface $request) : array
+    private function getResponse($request) : array
     {
         if ($request == null )
         {
             throw new NotificationException("Undefined response");
         }
         $response = json_decode($request->getBody()->getContents());
-
         return [
             "statusCode" => $request->getStatusCode(),
             "body" => $response->results[0]->error

@@ -10,26 +10,22 @@ use stdClass;
  * Class Sms
  * @package linnoxlewis\notificationService\services
  */
-class Sms implements NotificationInterface
+class Sms extends BaseClass
 {
-    /**
-     * secret api key.
-     *
-     * @var string
-     */
-    private $secretKey = "";
     /**
      * protocol(http/https).
      *
      * @var string
      */
     private const PROTOCOL = 'https';
+
     /**
      * sms service
      *
      * @var string
      */
     private const DOMAIN = 'sms.ru';
+
     /**
      * Number of attempts to contact the server.
      *
@@ -38,37 +34,18 @@ class Sms implements NotificationInterface
     private $countRepeat = 5;
 
     /**
-     * message title
+     * Method for sending message.
      *
-     * @var string
+     * @throws NotificationException
+     * @return array
      */
-    private $title = "";
-    /**
-     * message body
-     *
-     * @var string
-     */
-    private $body = "";
-    /**
-     * recipients
-     *
-     * @var array
-     */
-    private $recipients;
-
-    /**
-     * Sms constructor.
-     * @param string $secretKey
-     * @param string $title
-     * @param string $body
-     * @param array  $recipients
-     */
-    public function __construct(string $secretKey, string $title, string $body,array $recipients)
+    public function send(): array
     {
-        $this->secretKey = $secretKey;
-        $this->recipients = $recipients;
-        $this->title = $title;
-        $this->body = $body;
+        $data = $this->getData();
+        $url = $this->getUrl();
+        $request = $this->Request($url, $data);
+        $response = $this->getResponse($request);
+        return $response;
     }
 
     /**
@@ -91,7 +68,6 @@ class Sms implements NotificationInterface
         $data = new stdClass();
         $data->to = implode(",", $this->recipients);
         $data->msg = $this->title . " \r\n " . $this->body;
-
         return $data;
     }
 
@@ -106,23 +82,6 @@ class Sms implements NotificationInterface
         return $url;
     }
 
-    /**
-     * Method for sending message.
-     *
-     * @return array
-     */
-    public function send(): array
-    {
-        $data = $this->getData();
-
-        $url = $this->getUrl();
-
-        $request = $this->Request($url, $data);
-
-        $response = $this->getResponse($request);
-
-        return $response;
-    }
 
     /**
      * Get response from api.
@@ -134,12 +93,10 @@ class Sms implements NotificationInterface
      */
     private function getResponse($request) : array
     {
-        if ($request == null )
-        {
+        if ($request == null ) {
             throw new NotificationException("Undefined response");
         }
         $response = json_decode($request);
-
         return [
             "statusCode" => $response->status_code,
             "body" => $response->status . ". " . $response->status_text

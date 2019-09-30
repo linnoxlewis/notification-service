@@ -1,30 +1,30 @@
 <?php
 
-namespace linnoxlewis\notificationService;
+namespace linnoxlewis\notificationService\services;
 
 use linnoxlewis\notificationService\interfaces\NotificationInterface;
+use linnoxlewis\notificationService\NotificationException;
+use Symfony\Component\Finder\Adapter\AbstractAdapter;
 
 /**
- * Class NotificationService
- * Service for sending message.
- *
- * @package linnoxlewis\notificationService;
+ * Class Email
+ * @package linnoxlewis\notificationService\services
  */
-abstract class NotificationService
+Abstract class BaseClass
 {
     /**
      * message title
      *
      * @var string
      */
-    protected $title;
+    protected $title = "";
 
     /**
      * message body
      *
      * @var string
      */
-    protected $body;
+    protected $body = "";
 
     /**
      * to message
@@ -32,6 +32,13 @@ abstract class NotificationService
      * @var array
      */
     protected $recipients;
+
+    /**
+     * from message
+     *
+     * @var string
+     */
+    protected $from = "example@gmail.com";
 
     /**
      * Secret key
@@ -47,29 +54,20 @@ abstract class NotificationService
      * @param string $body
      * @param array  $recipients
      */
-    public function __construct(string $secretKey, string $title, string $body,array $recipients)
+    public function __construct(string $secretKey, string $title, string $body,array $recipients,string $from)
     {
         $this->secretKey = $secretKey;
         $this->recipients = $recipients;
         $this->title = $title;
         $this->body = $body;
+        $this->from = $from;
     }
 
     /**
      * Method for sending message.
      *
+     * @throws NotificationException
      * @return array
      */
-    public function send()
-    {
-        $send = $this->getService();
-        return $send->send();
-    }
-
-    /**
-     * Method get Email service
-     *
-     * @return NotificationInterface
-     */
-    abstract public function getService(): NotificationInterface;
+   abstract public function send();
 }
