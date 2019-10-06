@@ -10,7 +10,10 @@ use sngrl\PhpFirebaseCloudMessaging\Recipient\Device;
 use sngrl\PhpFirebaseCloudMessaging\Client;
 
 /**
+ * FCM Service model
+ *
  * Class Fcm
+ *
  * @package linnoxlewis\notificationService\services
  */
 class Fcm extends BaseClass
@@ -93,14 +96,13 @@ class Fcm extends BaseClass
      */
     private function getResponse($request) : array
     {
-        if ($request == null )
-        {
+        if ($request == null ) {
             throw new NotificationException("Undefined response");
         }
         $response = json_decode($request->getBody()->getContents());
         return [
             "statusCode" => $request->getStatusCode(),
-            "body" => $response->results[0]->error
+            "body" => $response->results[0]
         ];
     }
 }

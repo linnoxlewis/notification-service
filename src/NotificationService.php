@@ -2,11 +2,10 @@
 
 namespace linnoxlewis\notificationService;
 
-use linnoxlewis\notificationService\interfaces\NotificationInterface;
-
 /**
- * Class NotificationService
  * Service for sending message.
+ *
+ * Class NotificationService
  *
  * @package linnoxlewis\notificationService;
  */
@@ -18,6 +17,13 @@ abstract class NotificationService
      * @var string
      */
     protected $title;
+
+    /**
+     * from message
+     *
+     * @var string
+     */
+    protected $from;
 
     /**
      * message body
@@ -47,12 +53,14 @@ abstract class NotificationService
      * @param string $body
      * @param array  $recipients
      */
-    public function __construct(string $secretKey, string $title, string $body,array $recipients)
+    public function __construct(string $secretKey, string $title,
+                                string $body,array $recipients,string $from)
     {
         $this->secretKey = $secretKey;
         $this->recipients = $recipients;
         $this->title = $title;
         $this->body = $body;
+        $this->from = $from;
     }
 
     /**
@@ -62,14 +70,21 @@ abstract class NotificationService
      */
     public function send()
     {
-        $send = $this->getService();
-        return $send->send();
+        try {
+            $send = $this->getService();
+            return $send->send();
+        } catch (NotificationException $exception) {
+            return [
+                "statusCode" => $exception->getCode(),
+                "body" => $exception->getMessage()
+            ];
+        }
     }
 
     /**
-     * Method get Email service
+     * Method get service object
      *
-     * @return NotificationInterface
+     * @return object
      */
-    abstract public function getService(): NotificationInterface;
+    abstract public function getService();
 }

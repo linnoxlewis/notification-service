@@ -2,10 +2,11 @@
 
 namespace linnoxlewis\notificationService;
 
-use linnoxlewis\notificationService\interfaces\NotificationInterface;
 use linnoxlewis\notificationService\services\Email;
 
 /**
+ * Email service
+ *
  * Class EmailService
  *
  * @package linnoxlewis\notificationService
@@ -15,10 +16,17 @@ class EmailService extends NotificationService
     /**
      * Method get Email service
      *
-     * @return NotificationInterface
+     * @return Email
      */
-    public function getService(): NotificationInterface
+    public function getService()
     {
-       return new Email($this->secretKey,$this->title,$this->body,$this->recipients);
+        $model = new Email();
+        $model->setTitle($this->title);
+        $model->setSecretKey($this->secretKey);
+        $model->setBody($this->body);
+        $model->setRecipients($this->recipients);
+        $model->setFrom($this->from);
+
+        return $model;
     }
 }

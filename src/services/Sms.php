@@ -2,12 +2,14 @@
 
 namespace linnoxlewis\notificationService\services;
 
-use linnoxlewis\notificationService\interfaces\NotificationInterface;
 use linnoxlewis\notificationService\NotificationException;
 use stdClass;
 
 /**
+ * Sms service model
+ *
  * Class Sms
+ *
  * @package linnoxlewis\notificationService\services
  */
 class Sms extends BaseClass
@@ -17,14 +19,14 @@ class Sms extends BaseClass
      *
      * @var string
      */
-    private const PROTOCOL = 'https';
+    protected const PROTOCOL = 'https';
 
     /**
      * sms service
      *
      * @var string
      */
-    private const DOMAIN = 'sms.ru';
+    protected const DOMAIN = 'sms.ru';
 
     /**
      * Number of attempts to contact the server.
@@ -78,10 +80,9 @@ class Sms extends BaseClass
      */
     private function getUrl() : string
     {
-        $url = self::PROTOCOL . '://' . self::DOMAIN . '/sms/send';
+        $url = static::PROTOCOL . '://' . static::DOMAIN . '/sms/send';
         return $url;
     }
-
 
     /**
      * Get response from api.
@@ -120,24 +121,18 @@ class Sms extends BaseClass
         $ch = curl_init($url . "?json=1");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-
         curl_setopt($ch, CURLOPT_VERBOSE, 1);
-
         if (!$post) {
             $post = new stdClass();
         }
-
         if (!empty($post->api_id) && $post->api_id == 'none') {
         } else {
             $post->api_id = $this->secretKey;
         }
-
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query((array)$post));
-
         $body = curl_exec($ch);
         if ($body === FALSE) {
             $error = curl_error($ch);

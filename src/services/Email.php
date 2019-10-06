@@ -2,10 +2,9 @@
 
 namespace linnoxlewis\notificationService\services;
 
-use linnoxlewis\notificationService\interfaces\NotificationInterface;
-use linnoxlewis\notificationService\NotificationException;
-
 /**
+ * Email service model
+ *
  * Class Email
  *
  * @package linnoxlewis\notificationService\services
@@ -15,25 +14,18 @@ class Email extends BaseClass
     /**
      * Method for sending message.
      *
-     * @throws NotificationException
      * @return array
      */
     public function send(): array
     {
         $headers = $this->getHeader();
-        $result = [];
         foreach ($this->recipients as $recipient) {
-            if (mail($recipient, $this->title, $this->body, $headers))
-            {
-                $result = [
-                    "statusCode" => 200,
-                    "body" => "succsess"
-                ];
-            } else {
-                throw new NotificationException("sending failed");
-            }
+            (mail($recipient, $this->title, $this->body, $headers));
         }
-        return $result;
+        return [
+            'statusCode' => 200,
+            'body' => 'success'
+        ];
     }
 
     /**
@@ -41,11 +33,11 @@ class Email extends BaseClass
      *
      * @return string
      */
-    private function getHeader() : string
+    protected function getHeader(): string
     {
-        $headers = array("From: " . $this->from,
-            "Reply-To: replyto@example.com",
-            "X-Mailer: PHP/" . PHP_VERSION
+        $headers = array('From: ' . $this->from,
+            'Reply-To:' .  $this->from,
+            'X-Mailer: PHP/' . PHP_VERSION
         );
         $headers = implode("\r\n", $headers);
         return $headers;

@@ -2,15 +2,17 @@
 
 namespace linnoxlewis\notificationService\services;
 
-use linnoxlewis\notificationService\interfaces\NotificationInterface;
 use linnoxlewis\notificationService\NotificationException;
-use Symfony\Component\Finder\Adapter\AbstractAdapter;
+use yii\base\Model;
 
 /**
- * Class Email
+ * Базовый класс модели
+ *
+ * Class BaseClass
+ *
  * @package linnoxlewis\notificationService\services
  */
-Abstract class BaseClass
+Abstract class BaseClass extends Model
 {
     /**
      * message title
@@ -48,26 +50,126 @@ Abstract class BaseClass
     protected $secretKey;
 
     /**
-     * Service constructor.
-     * @param string $secretKey
-     * @param string $title
-     * @param string $body
-     * @param array  $recipients
+     * Get title
+     *
+     * @return string
      */
-    public function __construct(string $secretKey, string $title, string $body,array $recipients,string $from)
+    public function getTitle():string
     {
-        $this->secretKey = $secretKey;
-        $this->recipients = $recipients;
-        $this->title = $title;
-        $this->body = $body;
-        $this->from = $from;
+        return $this->title;
+    }
+
+    /**
+     * Set title
+     *
+     * @param  string $value значение
+     *
+     * @return $this
+     */
+    public function setTitle(string $value)
+    {
+        $this->title = $value;
+        return $this;
+    }
+
+    /**
+     * Get body field
+     *
+     * @return string
+     */
+    public function getBody():string
+    {
+        return $this->body;
+    }
+
+    /**
+     * Set body field
+     *
+     * @param  string $value значение
+     *
+     * @return $this
+     */
+    public function setBody($value)
+    {
+        $this->body = $value;
+        return $this;
+    }
+
+    /**
+     * Get recipients
+     *
+     * @return array
+     */
+    public function getRecipients(): array
+    {
+        return $this->recipients;
+    }
+
+    /**
+     * Set recipients
+     *
+     * @param  array $value значение
+     *
+     * @return $this
+     */
+    public function setRecipients(array $value)
+    {
+        $this->recipients = $value;
+        return $this;
+    }
+
+    /**
+     * get From field
+     *
+     * @return string
+     */
+    public function getFrom():string
+    {
+        return $this->from;
+    }
+
+    /**
+     * ser From field
+     *
+     * @param  string $value значение
+     *
+     * @return $this
+     */
+    public function setFrom(string  $value)
+    {
+        $this->from = $value;
+        return $this;
+    }
+
+    /**
+     * Get service secret key
+     *
+     * @return string
+     */
+    public function getSecretKey():string
+    {
+        return $this->secretKey;
+    }
+
+    /**
+     * Set secret service key
+     *
+     * @param  string $value значение
+     *
+     * @return $this
+     */
+    public function setSecretKey(string $value)
+    {
+        $this->secretKey = $value;
+        return $this;
     }
 
     /**
      * Method for sending message.
      *
      * @throws NotificationException
+     *
      * @return array
      */
-   abstract public function send();
+   abstract public function send():array;
 }

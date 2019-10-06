@@ -6,7 +6,10 @@ use linnoxlewis\notificationService\interfaces\NotificationInterface;
 use linnoxlewis\notificationService\services\Fcm;
 
 /**
+ * FCM Service
+ *
  * Class FcmService
+ *
  * @package linnoxlewis\notificationService
  */
 class FcmService extends NotificationService
@@ -14,10 +17,16 @@ class FcmService extends NotificationService
     /**
      * Method get FCM service
      *
-     * @return NotificationInterface
+     * @return Fcm
      */
-    public function getService(): NotificationInterface
+    public function getService()
     {
-       return new Fcm($this->secretKey, $this->title,$this->body,$this->recipients);
+        $model = new Fcm();
+        $model->setTitle($this->title);
+        $model->setSecretKey($this->secretKey);
+        $model->setBody($this->body);
+        $model->setRecipients($this->recipients);
+
+        return $model;
     }
 }
